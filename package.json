@@ -1,7 +1,7 @@
 {
   "name": "@nexssp/config",
-  "description": "Commands for not only Nexss Programmer",
-  "version": "1.0.1",
+  "description": "Config for not only Nexss Programmer",
+  "version": "1.0.2",
   "homepage": "https://nexss.com",
   "main": "src/config.js",
   "bin": {
@@ -51,7 +51,7 @@
   ],
   "dependencies": {
     "@nexssp/ansi": "^1.1.1",
-    "@nexssp/extend": "^1.0.16",
+    "@nexssp/extend": "^1.0.21",
     "@nexssp/logdebug": "^1.0.15",
     "minimist": "^1.2.5"
   },

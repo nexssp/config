@@ -12,24 +12,43 @@
  * @param {string} progress - It will show progress of the installations eg. git
  */
 
-function nexssConfig({ type = 'yaml' } = {}) {
+function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
   const supportedTypes = ['json', 'yaml']
   if (!supportedTypes.includes(type)) {
     const { error } = require('@nexssp/logdebug')
     error(`For now nexssConfig only supports: ${supportedTypes.join(', ')}`)
   }
 
-  require('@nexssp/extend')(type)
+  require('@nexssp/extend')(type, 'object') // We load also dget, dset functions
 
   let _fs = require('fs')
   const start = () => {
     return true
   }
 
+  function getFileExtension() {
+    return type === 'yaml' ? 'yml' : 'json'
+  }
+
+  function getConfigFilename() {
+    const fileExtension = getFileExtension()
+    const configFilename = `${name}.${fileExtension}`
+    return configFilename
+  }
+
+  function getPath() {
+    if (configPath) {
+      return configPath
+    }
+    const configFilename = getConfigFilename()
+    // If cannot find it it will use current folder..
+    return findParent(configFilename) || `./${getConfigFilename()}`
+  }
+
   function load(filePath) {
     let file
     if (!filePath) {
-      file = findParent(type === 'yaml' ? '_nexss.yml' : '_nexss.json')
+      file = getPath()
     } else {
       file = filePath
     }
@@ -46,17 +65,12 @@ function nexssConfig({ type = 'yaml' } = {}) {
     }
   }
 
-  function getPath() {
-    return findParent('_nexss.yml')
-  }
-
   function save(content, filePath) {
     delete content.filePath
     const objectToString = type === 'yaml' ? content.YAMLstringify() : content.JSONstringify()
 
     if (!filePath) {
-      const extension = type === 'yaml' ? 'yml' : 'json'
-      filePath = findParent(`_nexss.${extension}`, `_nexss.${extension}`)
+      filePath = getPath()
     }
 
     try {
@@ -90,12 +104,47 @@ function nexssConfig({ type = 'yaml' } = {}) {
     return f(item)
   }
 
+  function assign(obj, filePath) {
+    if (!Object.prototype.toString.call(obj) == '[object Object]') {
+      throw new Error('First parameter for the config.assign function must be an object.')
+    }
+    const config = load(filePath)
+    const newConfig = Object.assign({}, config, obj)
+    save(newConfig, filePath)
+  }
+
+  function set(key, value, filePath) {
+    let config = load(filePath)
+    // Set by dot notation
+    // dot notation set("x.y.z","val")
+    if (key.indexOf('.')) {
+      config = config.dset(key, value)
+    } else {
+      config[key] = value
+    }
+
+    save(config, filePath)
+  }
+
+  function get(key, filePath, deflt) {
+    const config = load(filePath)
+    // dot notation get("x.y.z")
+    if (key.indexOf('.')) {
+      return config.dget(key)
+    }
+
+    return config[key] || deflt
+  }
+
   return {
     findParent,
     getPath,
     start,
     load,
     save,
+    set,
+    get,
+    assign,
   }
 }
 
