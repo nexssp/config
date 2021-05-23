@@ -118,6 +118,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
     // Set by dot notation
     // dot notation set("x.y.z","val")
     if (key.indexOf('.')) {
+      if (!config) config = {}
       config = config.dset(key, value)
     } else {
       config[key] = value
@@ -145,6 +146,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
     set,
     get,
     assign,
+    getConfigFilename,
   }
 }
 

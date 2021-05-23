@@ -13,7 +13,7 @@
     "aliases.json"
   ],
   "scripts": {
-    "test1": "node ./bin/nexssp-config.js",
+    "test": "nexssp-test --debug",
     "prepare2": "npm run nexss:build",
     "nexss:build": "npx @nexssp/min@1.0.6",
     "nexss:clean": ""
@@ -56,7 +56,6 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@nexssp/test": "^1.0.20",
-    "prettier": "^2.3.0"
+    "@nexssp/test": "^1.0.29"
   }
 }
