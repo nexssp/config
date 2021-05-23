@@ -20,8 +20,8 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
   }
 
   require('@nexssp/extend')(type, 'object') // We load also dget, dset functions
-
-  let _fs = require('fs')
+  const _log = require('@nexssp/logdebug')
+  const _fs = require('fs')
   const start = () => {
     return true
   }
@@ -42,7 +42,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
     }
     const configFilename = getConfigFilename()
     // If cannot find it it will use current folder..
-    return findParent(configFilename) || `./${getConfigFilename()}`
+    return findParent(configFilename)
   }
 
   function load(filePath) {
@@ -66,11 +66,18 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
   }
 
   function save(content, filePath) {
-    delete content.filePath
+    delete content.filePath // ??? Nexss Programmer funcs ???
     const objectToString = type === 'yaml' ? content.YAMLstringify() : content.JSONstringify()
 
     if (!filePath) {
       filePath = getPath()
+      if (!filePath) {
+        const defaultConfigFile = getConfigFilename()
+        _log.dm(
+          `file has not been specified and can't be found. Using default one: ${defaultConfigFile}`
+        )
+        filePath = defaultConfigFile
+      }
     }
 
     try {
@@ -128,7 +135,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
   }
 
   function get(key, filePath, deflt) {
-    const config = load(filePath)
+    const config = load(filePath) || {}
     // dot notation get("x.y.z")
     if (key.indexOf('.')) {
       return config.dget(key)
