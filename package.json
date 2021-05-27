@@ -1,7 +1,7 @@
 {
   "name": "@nexssp/config",
   "description": "Config for not only Nexss Programmer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "homepage": "https://nexss.com",
   "main": "src/config.js",
   "bin": {
