@@ -32,7 +32,7 @@ module.exports = {
     },
     {
       title: 'display menu',
-      params: ['nexssp-file', /^add\|a/],
+      params: ['nexssp-config', /^\@nexssp.*config.*get\|g/s],
     },
   ],
 }

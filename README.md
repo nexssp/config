@@ -14,7 +14,7 @@ const config1 = nexssConfig({ type: 'yaml' }) //type can be yaml or json
 const configPath = config1.findParent('_nexss.yml')
 
 // if configPath is not specified, the found one fill be used. findParent is used implicitly
-// config Path is optional
+// configPath is optional
 config1.save({ myfile: 1, nest: [1, 2] }, configPath)
 
 const configObj = config1.load(configPath)
