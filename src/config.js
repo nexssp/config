@@ -19,7 +19,11 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
     error(`For now nexssConfig only supports: ${supportedTypes.join(', ')}`)
   }
 
-  require('@nexssp/extend')(type, 'object') // We load also dget, dset functions
+  const { dset, dget } = require('@nexssp/extend/object')
+
+  const { YAMLparse, YAMLstringify } = require('@nexssp/extend/yaml')
+  const { JSONparse, JSONstringify } = require('@nexssp/extend/json')
+
   const _log = require('@nexssp/logdebug')
   const _fs = require('fs')
   const start = () => {
@@ -56,7 +60,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
 
     try {
       const fileContent = _fs.readFileSync(file, 'utf8')
-      const content = type === 'yaml' ? fileContent.YAMLparse() : fileContent.JSONparse()
+      const content = type === 'yaml' ? YAMLparse(fileContent) : JSONparse(fileContent)
       return content
     } catch (error) {
       if (error.code !== 'ENOENT') {
@@ -67,7 +71,8 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
 
   function save(content, filePath) {
     delete content.filePath // ??? Nexss Programmer funcs ???
-    const objectToString = type === 'yaml' ? content.YAMLstringify() : content.JSONstringify()
+
+    const objectToString = type === 'yaml' ? YAMLstringify(content) : JSONstringify(content)
 
     if (!filePath) {
       filePath = getPath()
@@ -79,7 +84,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
         filePath = defaultConfigFile
       }
     }
-
+    _log.di(`@config @save type: ${type}, file: ${filePath}`)
     try {
       _fs.writeFileSync(filePath, objectToString)
     } catch (e) {
@@ -126,7 +131,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
     // dot notation set("x.y.z","val")
     if (key.indexOf('.')) {
       if (!config) config = {}
-      config = config.dset(key, value)
+      config = dset(config, key, value)
     } else {
       config[key] = value
     }
@@ -138,7 +143,7 @@ function nexssConfig({ type = 'yaml', name = '_nexss', configPath } = {}) {
     const config = load(filePath) || {}
     // dot notation get("x.y.z")
     if (key.indexOf('.')) {
-      return config.dget(key)
+      return dget(config, key)
     }
 
     return config[key] || deflt
