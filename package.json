@@ -13,7 +13,7 @@
     "aliases.json"
   ],
   "scripts": {
-    "test": "nexssp-test --debug",
+    "test": "npx nexssp-test --debug",
     "prepare2": "npm run nexss:build",
     "nexss:build": "npx @nexssp/min@1.0.6",
     "nexss:clean": ""
@@ -50,8 +50,9 @@
     }
   ],
   "dependencies": {
-    "@nexssp/extend": "^2.0.1",
-    "@nexssp/logdebug": "^1.0.15",
+    "@nexssp/extend": "^2.0.4",
+    "@nexssp/logdebug": "^1.0.18",
+    "@nexssp/plugin": "^1.0.5",
     "minimist": "^1.2.5"
   },
   "devDependencies": {

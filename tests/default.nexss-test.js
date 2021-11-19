@@ -1,4 +1,6 @@
 const { configDefault } = require('./config/config_testDefault')
+const { join } = require('path')
+const binFolder = join(process.cwd(), 'bin')
 
 module.exports = {
   defaultTestFunction: 'nSpawn',
@@ -32,7 +34,7 @@ module.exports = {
     },
     {
       title: 'display menu',
-      params: ['nexssp-config', /^\@nexssp.*config.*get\|g/s],
+      params: [`node ${join(binFolder, 'nexssp-config.js')}`, /^\@nexssp.*config.*get\|g/s],
     },
   ],
 }
