@@ -13,10 +13,7 @@
     "aliases.json"
   ],
   "scripts": {
-    "test": "npx nexssp-test --debug",
-    "prepare2": "npm run nexss:build",
-    "nexss:build": "npx @nexssp/min@1.0.6",
-    "nexss:clean": ""
+    "test": "npx @nexssp/test --debug"
   },
   "author": {
     "name": "Marcin Polak",
@@ -52,10 +49,10 @@
   "dependencies": {
     "@nexssp/extend": "^2.0.4",
     "@nexssp/logdebug": "^1.0.18",
-    "@nexssp/plugin": "^1.0.5",
+    "@nexssp/plugin": "^1.0.7",
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@nexssp/test": "^1.0.29"
+    "@nexssp/test": "^1.1.12"
   }
 }
